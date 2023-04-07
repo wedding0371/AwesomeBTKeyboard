@@ -1,0 +1,24 @@
+#ifndef _RESOURCE_H_
+#define _RESOURCE_H_
+
+// ESP32 TTGO OLED V2.0
+#define OLED_RESET_PIN 16
+#define OLED_CLOCK_PIN 15
+#define OLED_DATA_PIN 4
+
+// KeyPad
+#define ROTARY_ENCODER_A_PIN 32
+#define ROTARY_ENCODER_B_PIN 21
+#define ROTARY_ENCODER_BUTTON_PIN 25
+
+#define X_AXIS_PIN 35
+#define Y_AXIS_PIN 34
+#define BUT_AXIS_PIN 33
+
+#define KEY_TX_PIN 14
+#define KEY_RX_PIN 13
+
+#define LED_PIN 2
+#define LED_NUMPIXELS 16
+
+#endif

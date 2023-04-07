@@ -1,0 +1,10 @@
+Usage:
+    pio run -t upload
+
+libraries:
+    Adafruit_NeoPixel v1.10.5 	(by Adafruit)
+    u8g2 v2.32.15 				(by oliver)
+
+
+The oled flash frequency is 20Hz
+Key Flash frequency is 100Hz
