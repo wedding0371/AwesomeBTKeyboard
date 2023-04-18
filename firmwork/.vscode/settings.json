@@ -7,6 +7,22 @@
         "sstream": "cpp",
         "streambuf": "cpp",
         "utility": "cpp",
-        "atomic": "cpp"
-    }
+        "atomic": "cpp",
+        "optional": "cpp",
+        "ostream": "cpp",
+        "system_error": "cpp",
+        "functional": "cpp",
+        "tuple": "cpp",
+        "type_traits": "cpp",
+        "random": "cpp",
+        "deque": "cpp",
+        "string": "cpp",
+        "unordered_map": "cpp",
+        "vector": "cpp",
+        "string_view": "cpp",
+        "initializer_list": "cpp",
+        "*.tcc": "cpp",
+        "cmath": "cpp"
+    },
+    "python.formatting.provider": "black"
 }

@@ -5,12 +5,14 @@
 #include <HardwareSerial.h>
 
 #include "AiEsp32RotaryEncoder.h"
+#include "hc74165.h"
 #include "resource.h"
 
 struct KeyStatus {
     bool press = false;
     bool release = false;
-    uint8_t code = 0;
+
+    char code = 0;
 };
 
 class Keypad {
@@ -37,6 +39,8 @@ class Keypad {
     uint8_t key_rx_pin;
     // uint8_t keyboard_serial;
 
+    bool rocker_isclicked = false;
+
     uint8_t led_pin;
     uint8_t led_number;
 
@@ -55,7 +59,7 @@ class Keypad {
 
     void begin(uint8_t encoder_limit = 20);
 
-    long encoder_change();
+    int encoder_change();
     bool encoder_clicked();
 
     int key_read(uint8_t *code, bool *state);
@@ -66,6 +70,7 @@ class Keypad {
     float rocker_shift(int axis);
     float rocker_position(int axis);
     bool rocker_clicked();
+    bool rocker_released();
 
     void led_update();
     void led_clear(uint8_t r, uint8_t g, uint8_t b);

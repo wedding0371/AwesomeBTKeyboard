@@ -1,5 +1,7 @@
 #include "keypad.h"
 
+#include <math.h>
+
 // const uint8_t KeyCode[] = {
 // const uint8_t *KeyCode = {
 // 	'1', '4', '7', '*', ' ', ' ', ' ',
@@ -36,16 +38,14 @@ void Keypad::begin(uint8_t encoder_limit) {
     led_update();
 
     this->encoder = AiEsp32RotaryEncoder(
-        this->encoder_a_pin, this->encoder_b_pin, this->encoder_but_pin, -1, 2);
+        this->encoder_a_pin, this->encoder_b_pin, this->encoder_but_pin, -1, 4);
     this->encoder.begin();
-    // this->encoder.setup([]{encoder.readEncoder_ISR();});
     this->encoder.setBoundaries(0, 100000, true);
     this->encoder.setAcceleration(1);
     this->encoder.setEncoderValue(50000);
     (void)this->encoder.encoderChanged();
     this->encoder_limit = encoder_limit;
 
-    // this->serial = HardwareSerial(this->keyboard_serial);
     this->serial.begin(9600, SERIAL_8N1, this->key_rx_pin,
                        this->key_tx_pin);  // 14: tx, 13: rx
 
@@ -56,11 +56,18 @@ void Keypad::begin(uint8_t encoder_limit) {
 
 // }
 
-long Keypad::encoder_change() {
-    int delta = this->encoder.encoderChanged();
+int Keypad::encoder_change() {
+    // 编码器在实际使用时，会产生两个脉冲波，但是体感旋钮仅转动一次，因此一次返回值，一次取零
+    // static uint8_t last_return = false;
+    int delta = -this->encoder.encoderChanged();
     if (delta > this->encoder_limit) delta = this->encoder_limit;
     if (delta < -this->encoder_limit) delta = -this->encoder_limit;
+    // if (!last_return) {
+    //     last_return = true;
     return delta;
+    // }
+    // last_return = false;
+    return 0;
 }
 
 bool Keypad::encoder_clicked() {
@@ -146,12 +153,7 @@ void Keypad::rocker_correct() {
 
 float Keypad::rocker_position(int axis) {
     float value = 0;
-    uint8_t pin;
-
-    if (axis == 0)
-        pin = this->axis_x_pin;
-    else
-        pin = this->axis_y_pin;
+    uint8_t pin = (axis == 0) ? this->axis_x_pin : this->axis_y_pin;
 
     for (uint8_t i = 0; i < this->simple_count; i++) value += analogRead(pin);
     value = value / this->simple_count - this->middle_number[axis];
@@ -169,6 +171,12 @@ float Keypad::rocker_shift(int axis) {
 
     if (value == 0) return 0;
 
+    if (axis == 0) value = -value;
+
+    value *= 2;
+    if (value > 1) value = 1;
+    if (value < -1) value = -1;
+
     // value *= abs(tan(value * PI / 4));
     // value *= this->rocker_scale;
     return value;
@@ -177,15 +185,28 @@ float Keypad::rocker_shift(int axis) {
 bool Keypad::rocker_clicked() {
     static bool keystate = false;
     if (digitalRead(this->axis_but_pin) == 0) {
-        delay(10);
+        delay(20);
         if (digitalRead(this->axis_but_pin) == 0) {
             if (!keystate) {
                 keystate = true;
+                this->rocker_isclicked = true;
                 return true;
             }
-                }
+        }
     } else {
         keystate = false;
+    }
+    return false;
+}
+
+bool Keypad::rocker_released() {
+    if (this->rocker_isclicked) {
+        if (digitalRead(this->axis_but_pin) == 1) {
+            delay(20);
+            if (digitalRead(this->axis_but_pin) == 1) {
+                return true;
+            }
+        }
     }
     return false;
 }

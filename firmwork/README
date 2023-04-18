@@ -1,10 +1,25 @@
 Usage:
     pio run -t upload
 
-libraries:
-    Adafruit_NeoPixel v1.10.5 	(by Adafruit)
-    u8g2 v2.32.15 				(by oliver)
-
+/**
+ * resource:
+ *   encoder:   32, 21, 25
+ *   axis:      35, 34, 33
+ *   keys:      13, 14 (Serial1 remap, tx: 14, rx: 13)        10, 9 (SD3, SD2, Serial1) or 16 17 (Serial2)
+ *   ws2812:    unknow 1
+ *   oled:      scl 15, sda 4 and 16 for rst(must be high)
+ *   
+ * download config
+ *   Board:             ESP32 Dev Module
+ *   Upload Speed:      921600 
+ *   CPU Frequency:     240MHz(WiFi/BT)
+ *   Flash Frequency:   80MHz 
+ *   Flash Mode:        QIO 
+ *   Flash Size:        4MB 
+ *   Partition Scheme:  No OTA(2MB APP/2MB SPIFFS)
+ *   Core Debug Level:  No 
+ *   PSRAM:             Disabled 
+ */
 
 The oled flash frequency is 20Hz
 Key Flash frequency is 100Hz
